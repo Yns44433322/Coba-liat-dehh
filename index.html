@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Romantic Love Message</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+    .container {
+      position: relative;
+      width: 90%;
+      max-width: 700px;
+      height: 500px;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 25px;
+      padding: 30px 40px 110px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 0.6s ease;
+      overflow: hidden;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); }
+    .slide.prev { opacity: 0; transform: translateX(-100px); }
+    .slide h1, .slide h2 {
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24, #ff9ff3, #54a0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      line-height: 1.2;
+    }
+    .slide h1 { font-size: 2.5em; margin: 20px 0 30px 0; }
+    .slide h2 { font-size: 2.2em; font-weight: 600; margin: 20px 0 25px 0; color: #667eea; }
+    .message-text {
+      font-size: 1.2em;
+      line-height: 1.6;
+      color: #2c3e50;
+      font-weight: 400;
+      max-width: 480px;
+      white-space: pre-wrap;
+      text-align: center;
+      margin: 0 auto;
+      padding: 0 10px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .typing-text {
+      font-size: 1.2em;
+      line-height: 1.6;
+      color: #2c3e50;
+      font-weight: 400;
+      max-width: 480px;
+      white-space: pre-wrap;
+      min-height: 200px;
+      max-height: 280px;
+      text-align: left;
+      margin: 0 auto;
+      padding: 0 10px;
+      overflow-y: auto;
+    }
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.5em;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      animation: blink 1s infinite;
+      margin-left: 2px;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    .hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      color: rgba(255, 107, 107, 0.7);
+      animation: float 6s infinite linear;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+    .navigation {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+    }
+    .nav-btn {
+      padding: 8px 16px;
+      background: linear-gradient(45deg, rgba(102, 126, 234, 0.7), rgba(118, 75, 162, 0.7));
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      backdrop-filter: blur(5px);
+    }
+    .nav-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      background: linear-gradient(45deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+    }
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .nav-btn:disabled:hover {
+      transform: none;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+    @media (max-width: 768px) {
+      .container { width: 95%; height: 450px; }
+      .slide { padding: 20px 25px 90px 25px; }
+      .slide h1 { font-size: 2em; margin: 15px 0 20px 0; }
+      .slide h2 { font-size: 1.8em; margin: 15px 0 20px 0; }
+      .message-text, .typing-text { font-size: 1.1em; max-width: 100%; }
+      .typing-text { min-height: 150px; max-height: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+  
+  <div class="container">
+    <!-- Slide 1: Welcome -->
+    <div class="slide active">
+      <h1>💕 Surat Tercinta Untuk Kherin Silvia 💕</h1>
+      <div class="message-text">
+        Hallo sayangg 💖
+
+Aku cuma mau bilang...
+
+Selamat Hari Girlfriend buat cintahhh aku iniii! 🎉
+
+Aku sayangg banget sama kamuu, sayangg.
+Aku bersyukur banget karena kamu nerima aku dengan apa adanyaa 🥺
+
+Pokoknya akuuu tuuuu cayankk banget sama kamuuu, selaluuu!
+
+Muachhh~ 😘💕
+      </div>
+    </div>
+
+    <!-- Slide 2: What You Mean to Me -->
+    <div class="slide">
+      <h2>Arti Kamu Buat Aku</h2>
+      <div class="message-text">
+        Kamu tau gak sih sayang? 💭
+
+Kamu itu kayak matahari di hidupku,
+yang selalu bikin hari-hariku jadi cerah ☀️
+
+Setiap kali aku liat senyum kamu,
+rasanya dunia ini jadi lebih indah 😊
+
+Kamu adalah alasan aku bangun pagi,
+dan mimpi terindah sebelum tidur 🌙
+
+Makasih udah jadi bagian terpenting
+dalam hidup aku, sayang 💕
+      </div>
+    </div>
+
+    <!-- Slide 3: Typing Animation -->
+    <div class="slide">
+      <h2>Janji Aku Untuk Kamu</h2>
+      <div class="typing-text" id="typingText">
+        <span class="cursor"></span>
+      </div>
+    </div>
+
+    <!-- Slide 4: Forever -->
+    <div class="slide">
+      <h1>Selamanya & Selalu</h1>
+      <div class="message-text">
+        Aku berjanji sama kamu sayang... 💍
+
+Akan selalu ada buat kamu,
+di saat senang maupun sedih 🤗
+
+Akan selalu dukung impian-impian kamu,
+dan jadi yang terdepan buat nyemangatin 📣
+
+Akan selalu sayang sama kamu,
+apa adanya, tanpa syarat apapun 💝
+
+Karena kamu adalah cinta sejati aku,
+sekarang dan selamanya 💖
+
+With all my love,
+Ahmad Yunus 💖
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+      <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    
+    // Typing animation text
+    const typingMessage = `Hallo sayangg 💖
+
+Aku cuma mau bilang...
+
+Selamat Hari Girlfriend buat cintahhh aku iniii! 🎉
+
+Aku sayangg banget sama kamuu, sayangg.
+Aku bersyukur banget karena kamu nerima aku dengan apa adanyaa 🥺
+
+Pokoknya akuuu tuuuu cayankk banget sama kamuuu, selaluuu!
+
+Muachhh~ 😘💕`;
+
+    let typingIndex = 0;
+    let isTyping = false;
+
+    function updateNavigation() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === totalSlides - 1;
+    }
+
+    function changeSlide(direction) {
+      const newSlide = currentSlide + direction;
+      
+      if (newSlide >= 0 && newSlide < totalSlides) {
+        slides[currentSlide].classList.remove('active');
+        slides[currentSlide].classList.add('prev');
+        
+        currentSlide = newSlide;
+        
+        setTimeout(() => {
+          slides.forEach(slide => slide.classList.remove('prev'));
+          slides[currentSlide].classList.add('active');
+          
+          // Start typing animation on slide 3 (index 2)
+          if (currentSlide === 2 && !isTyping) {
+            startTypingAnimation();
+          }
+        }, 100);
+        
+        updateNavigation();
+      }
+    }
+
+    function startTypingAnimation() {
+      isTyping = true;
+      const typingElement = document.getElementById('typingText');
+      const cursor = typingElement.querySelector('.cursor');
+      typingIndex = 0;
+      
+      // Clear previous text but keep cursor
+      typingElement.innerHTML = '<span class="cursor"></span>';
+      
+      function typeCharacter() {
+        if (typingIndex < typingMessage.length) {
+          const char = typingMessage[typingIndex];
+          const textNode = document.createTextNode(char);
+          typingElement.insertBefore(textNode, cursor);
+          typingIndex++;
+          
+          // Variable typing speed for more natural feel
+          const delay = char === '.' || char === ',' ? 300 : 
+                       char === '\n' ? 500 : 
+                       Math.random() * 100 + 50;
+          
+          setTimeout(typeCharacter, delay);
+        }
+      }
+      
+      setTimeout(typeCharacter, 500);
+    }
+
+    // Create floating hearts
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '💖';
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+      heart.style.opacity = Math.random() * 0.5 + 0.3;
+      
+      document.getElementById('hearts').appendChild(heart);
+      
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+
+    // Initialize
+    updateNavigation();
+    
+    // Create hearts periodically
+    setInterval(createHeart, 2000);
+    
+    // Auto-advance slides (optional - remove if you want manual only)
+    let autoAdvance = setInterval(() => {
+      if (currentSlide < totalSlides - 1) {
+        changeSlide(1);
+      } else {
+        clearInterval(autoAdvance);
+      }
+    }, 8000);
+    
+    // Pause auto-advance when user interacts
+    document.addEventListener('click', () => {
+      clearInterval(autoAdvance);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+      if (e.key === 'ArrowRight') changeSlide(1);
+    });
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967eb62e55cb4f50',t:'MTc1Mzk4MTg1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
